@@ -1,15 +1,33 @@
+![uga (micro gravity alpha) full intro logo](https://github.com/liaminventions/uga/blob/main/ugafull.png?raw=true)
+
+![speeder](https://github.com/liaminventions/uga/blob/main/mm.png?raw=true)
+
+THIS IS A PROTOTYPE. BE WARNED!
+
+## so - what is this?
+uga (micro gravity alpha) is a prospective anti-gravity-style racing league, inspired by wipEout (especially wipEout 3). Races are played using constant downward air vortices (stabilizers) to maintain a coasting altitude, and backward airflow for ground speed. (thrusters)
+
+This POC (proof of concept) aircraft is a small foot-long model of the uga_p ship, which is based on the "arrowhead"-type design of *Feisar* or *Pirhana* ships. Future designs include the uga_u ship, which has the distinctive "u-shape" layout seen in *Auricom* and *Qirex* ships; and possibly a uga_h - with the EjoWerks H-frame design.
+
+This third-generation speeder design is forked from the LandSpeeder project by Nicholas Rehm, which in turn is based on the original [EjoWerks speeder](https://sites.google.com/view/ejowerks-speeder/).
+
+The main difference that sets this design apart from the previous projects is the use of EDFs (electric ducted fans) and curved thrust tubes. This allows for full rotor concealment and higher landspeed. 
+
+The curved thrust tube idea is inspired by [the Bladeless Drone by Stefano Rivellini](www.youtube.com/watch?v=5L6FSdUmEpg)
+
 ![dRehmFlight Logo](https://github.com/nickrehm/dRehmFlight/blob/master/dRehmFlight%20Logo.png)
+
+THIS IS NOT A CLEAN VERSION OF DREHMFLIGHT VTOL. 
+CLEAN VERSION AVAILABLE HERE: https://github.com/nickrehm/dRehmFlight
+
+
+Original RC DRIFT CAR project info:
 
 [Intro Video](https://www.youtube.com/watch?v=tlD0C5CrWcA&lc=Ugx6m02xjHk8QH19vd94AaABAg)
 
 [RcGroups Support Thread](https://www.rcgroups.com/forums/showthread.php?3706571-dRehmFlight-VTOL-Teensy-Flight-Controller-and-Stabilization)
 
-![speeder](https://github.com/nickrehm/dRehmFlight-LandSpeeder/blob/main/LandSpeeder.png)
-
-THIS IS NOT A CLEAN VERSION OF DREHMFLIGHT VTOL. UPDATES MADE FOR THE FLYING RC DRIFT CAR: [Watch the Video Here](https://www.youtube.com/watch?v=dcu0jODIlWU)
-
-CLEAN VERSION AVAILABLE HERE: https://github.com/nickrehm/dRehmFlight
-
+UPDATES MADE FOR THE FLYING RC DRIFT CAR: [Watch the Video Here](https://www.youtube.com/watch?v=dcu0jODIlWU)
 FULL INSTRUCTIONS AND PARTS LIST FOR THIS PROJECT HERE: https://www.drehmflight.com/post/flying-rc-drift-car
 
 ## Overview
