@@ -1,3 +1,9 @@
+// uga system code (PROTO)
+// September 2026
+//      waverider
+
+// Fork information:
+
 //Arduino/Teensy Flight Controller - dRehmFlight - MODIFIED FOR PUSHER QUAD LANDSPEEDER PROJECT
 //Author: Nicholas Rehm
 //Project Start: 1/6/2020
@@ -233,7 +239,9 @@ float maxBankAngle_100thro = 25.0; // this is the maximum bank angle into a turn
 
 //NOTE: Pin 13 is reserved for onboard LED, pins 18 and 19 are reserved for the MPU6050 IMU for default setup
 //Radio:
-//Note: If using SBUS, connect to pin 21 (RX5), if using DSM, connect to pin 15 (RX3)
+//Note: If using SBUS, connect to pin 21 (RX5), if using DSM, connect to pin 15 (RX3).
+//If using CRSF, connect to pins 15 and 14 (rx3 and tx3, respectively.)
+//Pins 16 and 17 are reserved for LIDAR communication.  
 const int ch1Pin = 22; //throttle
 const int ch2Pin = 21; //ail
 const int ch3Pin = 20; //ele
@@ -543,7 +551,7 @@ void controlMixer() {
   //uga_p mixing
 
   // Stabilizers
-  m1_command_scaled = motorFade * (-pitch_PID + alt_PID + hover_thro);                              // Front
+  m1_command_scaled = motorFade * (-pitch_PID + alt_PID + hover_thro);                                                      // Front
   m2_command_scaled = motorFade * (pitch_PID / fconst - roll_PID  + alt_PID / faltconst + hover_thro / faltconst);          // Back Left
   m3_command_scaled = motorFade * (-pitch_PID / fconst + roll_PID + alt_PID / faltconst + hover_thro / faltconst);          // Back Right
   m4_command_scaled = 0;
@@ -1361,7 +1369,7 @@ void getCommands() {
         channel_4_pwm = values[3];
         channel_5_pwm = values[4];
         channel_6_pwm = values[5];
-    }
+    }  
   // add CRSF support
   #elif defined USE_CRSF_RX
     crsf.update(); 
@@ -1640,8 +1648,8 @@ void throttleCut() {
     m6_command_PWM = 120;
     
     //Uncomment if using servo PWM variables to control motor ESCs
-    //s1_command_PWM = 0;
-    //s2_command_PWM = 0;
+    s1_command_PWM = 0;
+    s2_command_PWM = 0;
     //s3_command_PWM = 0;
     //s4_command_PWM = 0;
     //s5_command_PWM = 0;
