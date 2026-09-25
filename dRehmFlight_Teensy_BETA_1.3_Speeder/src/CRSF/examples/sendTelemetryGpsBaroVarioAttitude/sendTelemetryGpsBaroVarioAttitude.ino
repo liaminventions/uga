@@ -1,0 +1,123 @@
+#include <AlfredoCRSF.h>
+#include <HardwareSerial.h>
+
+#define PIN_RX 4
+#define PIN_TX 5
+
+// How often to send telemetry, in milliseconds. Do not send telemetry every
+// loop: ELRS only carries it as fast as the Telem Ratio allows, so sending
+// faster does not make it arrive sooner, it just backs up the serial buffer
+// and slows this loop down. This example sends several frames per cycle, so
+// keep the rate modest and within what your ratio can carry.
+#define TELEM_INTERVAL_MS 100
+
+// Set up a new Serial object
+HardwareSerial crsfSerial(1);
+AlfredoCRSF crsf;
+
+uint32_t lastTelemMs = 0;
+
+void setup()
+{
+  Serial.begin(115200);
+  Serial.println("COM Serial initialized");
+  
+  crsfSerial.begin(CRSF_BAUDRATE, SERIAL_8N1, PIN_RX, PIN_TX);
+  if (!crsfSerial) while (1) Serial.println("Invalid crsfSerial configuration");
+
+  crsf.begin(crsfSerial);
+}
+
+void loop()
+{
+  // Call crsf.update() every loop to process incoming data and keep link state current
+  crsf.update();
+
+  if (millis() - lastTelemMs >= TELEM_INTERVAL_MS)
+  {
+    lastTelemMs = millis();
+    sendGps(42.12345, -82.12345, 200.5, 20.13, 690, 4);
+    sendGpsTime(2026, 7, 14, 12, 34, 56, 789);
+    sendBaroAltitude(234.1, 154.1);
+    sendAttitude(0.05,-2.43,1.23);
+    sendAirspeed(87.5);
+  }
+}
+
+void sendGps(float latitude, float longitude, float groundspeed, float heading, float altitude, float satellites)
+{
+  crsf_sensor_gps_t crsfGps = { 0 };
+
+  // Values are MSB first (BigEndian)
+  crsfGps.latitude = htobe32((int32_t)(latitude*10000000.0));
+  crsfGps.longitude = htobe32((int32_t)(longitude*10000000.0));
+  crsfGps.groundspeed = htobe16((uint16_t)(groundspeed*10.0));
+  crsfGps.heading = htobe16((uint16_t)(heading*100.0)); //degrees * 100, so 0-360 degrees fits in 0-36000
+  crsfGps.altitude = htobe16((uint16_t)(altitude + 1000.0));
+  crsfGps.satellites = (uint8_t)(satellites);
+  crsf.queuePacket(CRSF_SYNC_BYTE, CRSF_FRAMETYPE_GPS, &crsfGps, sizeof(crsfGps));
+}
+
+// Lets a connected handset set its clock from GPS time (requires ELRS 4.1+
+// and EdgeTX 2.11+; older versions simply ignore the packet)
+void sendGpsTime(int16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second, uint16_t millisecond)
+{
+  crsf_sensor_gps_time_t crsfGpsTime = { 0 };
+
+  // Values are MSB first (BigEndian)
+  crsfGpsTime.year = htobe16(year);
+  crsfGpsTime.month = month;
+  crsfGpsTime.day = day;
+  crsfGpsTime.hour = hour;
+  crsfGpsTime.minute = minute;
+  crsfGpsTime.second = second;
+  crsfGpsTime.millisecond = htobe16(millisecond);
+  crsf.queuePacket(CRSF_SYNC_BYTE, CRSF_FRAMETYPE_GPS_TIME, &crsfGpsTime, sizeof(crsfGpsTime));
+}
+
+// Sends altitude and vertical speed together in one BaroAltitude packet.
+// EdgeTX decides what the packet contains from its length: a 2 byte payload
+// is altitude only, and a 4 byte payload adds ELRS style vertical speed.
+// Very old EdgeTX versions only understand the altitude, in which case send
+// vertical speed separately with sendVario() below.
+void sendBaroAltitude(float altitude, float verticalspd)
+{
+  crsf_sensor_baro_altitude_t crsfBaroAltitude = { 0 };
+
+  // Values are MSB first (BigEndian)
+  crsfBaroAltitude.altitude = htobe16((uint16_t)(altitude*10.0 + 10000.0)); //decimeters + 10000dm
+  crsfBaroAltitude.verticalspd = htobe16((int16_t)(verticalspd*100.0));     //cm/s
+  crsf.queuePacket(CRSF_SYNC_BYTE, CRSF_FRAMETYPE_BARO_ALTITUDE, &crsfBaroAltitude, sizeof(crsfBaroAltitude));
+}
+
+// Airspeed, as measured by a pitot tube. This is the speed through the air,
+// which is not the same as the GPS ground speed sent above.
+void sendAirspeed(float speed)
+{
+  crsf_sensor_airspeed_t crsfAirspeed = { 0 };
+
+  // Values are MSB first (BigEndian)
+  crsfAirspeed.speed = htobe16((uint16_t)(speed*10.0)); //km/h * 10
+  crsf.queuePacket(CRSF_SYNC_BYTE, CRSF_FRAMETYPE_AIRSPEED, &crsfAirspeed, sizeof(crsfAirspeed));
+}
+
+// Vertical speed on its own, for when it does not come from a barometer
+void sendVario(float verticalspd)
+{
+  crsf_sensor_vario_t crsfVario = { 0 };
+
+  // Values are MSB first (BigEndian)
+  crsfVario.verticalspd = htobe16((int16_t)(verticalspd*100.0)); //cm/s
+  crsf.queuePacket(CRSF_SYNC_BYTE, CRSF_FRAMETYPE_VARIO, &crsfVario, sizeof(crsfVario));
+}
+
+void sendAttitude(float pitch, float roll, float yaw)
+{
+  crsf_sensor_attitude_t crsfAttitude = { 0 };
+
+  // Values are MSB first (BigEndian)
+  crsfAttitude.pitch = htobe16((int16_t)(pitch*10000.0));
+  crsfAttitude.roll = htobe16((int16_t)(roll*10000.0));
+  crsfAttitude.yaw = htobe16((int16_t)(yaw*10000.0));
+  crsf.queuePacket(CRSF_SYNC_BYTE, CRSF_FRAMETYPE_ATTITUDE, &crsfAttitude, sizeof(crsfAttitude));
+}

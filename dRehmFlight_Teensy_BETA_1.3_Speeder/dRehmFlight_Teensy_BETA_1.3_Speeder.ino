@@ -62,9 +62,11 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
 
 //REQUIRED LIBRARIES (included with download in main sketch folder)
 
-#include <Wire.h>     //I2c communication
-#include <SPI.h>      //SPI communication
+#include <Wire.h>           //I2c communication
+#include <SPI.h>            //SPI communication
+#include <HardwareSerial.h> //Serial communication
 #include <PWMServo.h> //Commanding any extra actuators, installed with teensyduino installer
+
 #include "src/TFMPlus/TFMPlus.h"
 
 #if defined USE_SBUS_RX
@@ -76,8 +78,7 @@ static const uint8_t num_DSM_channels = 6; //If using DSM RX, change this to mat
 #endif
 
 #if defined USE_CRSF_RX
-  #include <AlfredoCRSF.h>
-  #include <HardwareSerial.h>
+  #include "src/CRSF/src/AlfredoCRSF.h" // CRSF (crossfire) for ELRS 
 #endif
 
 #if defined USE_MPU6050_I2C
