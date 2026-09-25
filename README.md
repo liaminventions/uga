@@ -9,6 +9,8 @@ uga (micro gravity alpha) is a prospective anti-gravity-style racing league, ins
 
 This POC (proof of concept) aircraft is a small foot-long model of the uga_p ship, which is based on the "arrowhead"-type design of *Feisar* or *Pirhana* ships. Future designs include the uga_u ship, which has the distinctive "u-shape" layout seen in *Auricom* and *Qirex* ships; and possibly a uga_h - with the EjoWerks H-frame design.
 
+![ship types](https://github.com/liaminventions/uga/blob/main/shiptypes.png?raw=true)
+
 This third-generation speeder design is forked from the LandSpeeder project by Nicholas Rehm, which in turn is based on the original [EjoWerks speeder](https://sites.google.com/view/ejowerks-speeder/).
 
 The main difference that sets this design apart from the previous projects is the use of EDFs (electric ducted fans) and curved thrust tubes. This allows for full rotor concealment and higher landspeed. 
